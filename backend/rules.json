@@ -1,0 +1,158 @@
+{
+  "_comment": "All decision-engine thresholds live here (SRS: Maintainability). Edit numbers here, not in decision_engine.py. Soil moisture is volumetric % (Open-Meteo m3/m3 x 100).",
+
+  "stage_order": ["sowing", "vegetative", "flowering", "maturity"],
+
+  "stage_labels": {
+    "sowing": "early sprouting",
+    "vegetative": "leaf-growth",
+    "flowering": "flowering",
+    "maturity": "ripening"
+  },
+
+  "crops": {
+    "rice":   {"display": "rice",   "moisture_low": 30, "moisture_high": 50, "min_watering_days": 5,
+               "stages": [{"name": "sowing", "until_day": 20}, {"name": "vegetative", "until_day": 60}, {"name": "flowering", "until_day": 90}, {"name": "maturity", "until_day": 130}],
+               "topup_stages": ["vegetative"]},
+    "wheat":  {"display": "wheat",  "moisture_low": 20, "moisture_high": 38, "min_watering_days": 2,
+               "stages": [{"name": "sowing", "until_day": 20}, {"name": "vegetative", "until_day": 60}, {"name": "flowering", "until_day": 90}, {"name": "maturity", "until_day": 130}],
+               "topup_stages": ["vegetative"]},
+    "cotton": {"display": "cotton", "moisture_low": 18, "moisture_high": 35, "min_watering_days": 2,
+               "stages": [{"name": "sowing", "until_day": 25}, {"name": "vegetative", "until_day": 70}, {"name": "flowering", "until_day": 120}, {"name": "maturity", "until_day": 180}],
+               "topup_stages": ["vegetative", "flowering"]},
+    "tomato": {"display": "tomato", "moisture_low": 22, "moisture_high": 38, "min_watering_days": 3,
+               "stages": [{"name": "sowing", "until_day": 20}, {"name": "vegetative", "until_day": 45}, {"name": "flowering", "until_day": 90}, {"name": "maturity", "until_day": 130}],
+               "topup_stages": ["flowering"]},
+    "maize":  {"display": "maize",  "moisture_low": 20, "moisture_high": 36, "min_watering_days": 2,
+               "stages": [{"name": "sowing", "until_day": 15}, {"name": "vegetative", "until_day": 55}, {"name": "flowering", "until_day": 80}, {"name": "maturity", "until_day": 120}],
+               "topup_stages": ["vegetative"]}
+  },
+
+  "default_crop": {"display": "crop", "moisture_low": 22, "moisture_high": 38, "min_watering_days": 3,
+                   "stages": [{"name": "sowing", "until_day": 20}, {"name": "vegetative", "until_day": 60}, {"name": "flowering", "until_day": 90}, {"name": "maturity", "until_day": 130}],
+                   "topup_stages": ["vegetative"]},
+
+  "stage_irrigation_sensitivity": {
+    "sowing": 1.2,
+    "vegetative": 1.0,
+    "flowering": 1.4,
+    "maturity": 0.5
+  },
+
+  "irrigation": {
+    "critical_factor": 0.75,
+    "borderline_factor": 1.15,
+    "trend_change_points": 2.0,
+    "rain_heavy_mm": 8,
+    "rain_light_mm": 3,
+    "no_rain_mm": 1,
+    "hot_c": 32,
+    "very_hot_c": 35,
+    "compound_hot_c": 33,
+    "points": {
+      "critical_dry": 50,
+      "dry": 30,
+      "borderline": 10,
+      "falling_trend": 15,
+      "rising_trend": -10,
+      "rain_heavy": -35,
+      "rain_light": -15,
+      "no_rain": 10,
+      "very_hot": 15,
+      "hot": 8,
+      "compound_bonus": 15,
+      "low_watering_history": 6,
+      "wilting_and_dry": 20,
+      "wet_soil": -40
+    },
+    "thresholds": {"irrigate_now": 70, "irrigate_soon": 45, "watch": 25}
+  },
+
+  "time_windows": {
+    "irrigate_now": "within 6 hours",
+    "irrigate_soon": "by tomorrow morning",
+    "wait": "re-check tomorrow",
+    "wait_rain": "re-check after the rain, in about 2 days",
+    "wait_wet": "hold off watering for 2-3 days",
+    "no_action": "nothing needed today",
+    "fertilizer": "within 3 days",
+    "pest_sev1": "within 2-3 days",
+    "pest_sev2": "within 24 hours",
+    "pest_sev3": "today, as soon as possible"
+  },
+
+  "irrigation_consequences": {
+    "sowing": "If the soil keeps drying, seeds may not sprout evenly and young plants can die.",
+    "vegetative": "If the soil keeps drying, your crop will be stressed and growth will slow down.",
+    "flowering": "If the soil keeps drying during flowering, flowers may drop and yield can fall sharply.",
+    "maturity": "If the soil stays too dry, grain or fruit may fill poorly and quality can suffer."
+  },
+  "wait_consequence": "Nothing serious happens if you wait, but if the soil keeps drying you will need to water soon.",
+  "wet_consequence": "If you water now, roots can rot and diseases spread more easily in soaked soil.",
+  "no_action_consequence": "Nothing serious happens if you do nothing today. We will keep watching the weather and soil for you.",
+
+  "pest": {
+    "score_by_severity": {"1": 45, "2": 65, "3": 85},
+    "humid_pct": 75,
+    "hot_dry_c": 30,
+    "low_photo_confidence": 50,
+    "manual_confidence": 60
+  },
+
+  "conditions": {
+    "healthy":          {"category": "healthy"},
+    "normal":           {"category": "healthy"},
+    "spotted":          {"category": "fungal",   "severity": 1, "label": "spotted leaves"},
+    "leaf_spot":        {"category": "fungal",   "severity": 1, "label": "leaf spots"},
+    "leaf_blight":      {"category": "fungal",   "severity": 2, "label": "leaf blight"},
+    "fungal_disease":   {"category": "fungal",   "severity": 2, "label": "a fungal disease"},
+    "pest_infestation": {"category": "pest",     "severity": 2, "label": "pests on the crop"},
+    "viral_disease":    {"category": "viral",    "severity": 3, "label": "a virus-like disease"},
+    "yellowing":        {"category": "nutrient", "severity": 0, "label": "yellowing leaves"},
+    "wilting":          {"category": "wilting",  "severity": 2, "label": "wilting plants"}
+  },
+
+  "condition_advice": {
+    "fungal": "Remove badly spotted leaves and avoid wetting the leaves when you water. If the spots keep spreading, spray a fungicide recommended by your local agriculture office.",
+    "pest": "Look under the leaves for insects. Spraying a neem-oil solution in the evening helps. If pests keep spreading, ask your local agriculture office for the right spray.",
+    "viral": "Pull out and destroy badly affected plants so it does not spread, and control the small insects (like whiteflies and aphids) that carry it. Ask your local agriculture office for help.",
+    "nutrient_dry_or_ok": "Yellow leaves often mean the plant is short of nutrients. Check the fertilizer tip below.",
+    "nutrient_wet": "Yellow leaves in very wet soil usually mean too much water. Reduce watering and make sure water can drain away.",
+    "wilting_dry": "Wilting here is most likely thirst. Water first, then check again after a few hours.",
+    "wilting_wet": "The plants are wilting even though the soil is not dry. This can mean root rot or insects at the base. Check the roots and stem, and ask your local agriculture office if you see damage.",
+    "unknown": "Something looks wrong with the crop. Check leaves and stems closely and ask your local agriculture office if it spreads."
+  },
+
+  "pest_consequences": {
+    "fungal": "If left alone, the disease can spread to healthy plants and reduce your harvest.",
+    "pest": "If left alone, pests can multiply quickly and damage leaves, flowers and fruit.",
+    "viral": "If left alone, the disease can spread across the whole field and there is no cure for infected plants.",
+    "wilting": "If left alone, the plants may die and the harvest can be lost.",
+    "unknown": "If left alone, the problem may spread and reduce your harvest."
+  },
+
+  "fertilizer": {
+    "score_topup_never_used": 50,
+    "score_yellowing_topup": 55,
+    "score_yellowing_other": 40,
+    "heavy_rain_skip_mm": 15,
+    "water_first_risk": 45,
+    "tips_by_stage": {
+      "sowing": "At sowing, a basal dose of well-rotted compost or the recommended starter fertilizer helps roots establish.",
+      "vegetative": "During leaf growth, nitrogen-rich fertilizer split into small doses works better than one large dose.",
+      "flowering": "At flowering, avoid heavy nitrogen; potash and phosphorus support flowers and fruit.",
+      "maturity": "Near harvest, stop fertilizing - extra nutrients now will not help the crop."
+    },
+    "hormone_tip": "Plant growth hormones are optional. Use only locally approved products and follow the label dose - too much can harm the crop.",
+    "consequence_never_used": "If the crop gets no nutrients during this stage, growth can be slower and yield lower.",
+    "consequence_yellowing": "If the nutrient shortage continues, leaves will keep yellowing and yield can drop."
+  },
+
+  "data_quality": {
+    "estimated_weather_penalty": 8,
+    "short_trend_penalty": 5,
+    "no_crop_check_penalty": 3,
+    "conflict_penalty": 5,
+    "low_photo_penalty": 5
+  }
+}
