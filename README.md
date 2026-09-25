@@ -1,5 +1,7 @@
 # 🌾 FarmSense
 
+Live Video Demo -> https://drive.google.com/file/d/1PVLH4cIJxnNWEMyuhtp5CakAInwSt38G/view?usp=sharing
+
 ### Build the Decision, Not the Dashboard.
 
 > **FarmSense is an intelligent decision-support system for smallholder farmers that combines weather, modeled soil conditions, crop information, farmer history, and crop-health signals to produce one clear, explainable action.**
